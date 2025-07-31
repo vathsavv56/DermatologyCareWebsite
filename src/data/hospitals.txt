@@ -1,0 +1,103 @@
+HOSPITAL|Apollo Dermatology Center|15 MG Road, Connaught Place|New Delhi|Delhi|110001|4.8|18|Dr. Rajesh Sharma,Dr. Priya Gupta,Dr. Amit Kumar,Dr. Sunita Verma|General Dermatology,Cosmetic Procedures,Skin Cancer Treatment|011-2345-6789|apollo-derm.in
+DOCTOR|Dr. Rajesh Sharma|Cosmetic Dermatology|15|4.9|Available|09:00-17:00|General Dermatology,Botox,Chemical Peels,Laser Treatments
+DOCTOR|Dr. Priya Gupta|Medical Dermatology|12|4.7|Available|08:00-16:00|Skin Cancer,Psoriasis,Eczema Treatment,Mole Mapping
+DOCTOR|Dr. Amit Kumar|Pediatric Dermatology|8|4.8|Busy|10:00-18:00|Children's Skin Conditions,Birthmarks,Pediatric Eczema
+DOCTOR|Dr. Sunita Verma|Surgical Dermatology|20|4.9|Available|07:00-15:00|Mohs Surgery,Skin Cancer Removal,Reconstructive Surgery
+
+HOSPITAL|Fortis Skin Clinic|23 Park Street, Salt Lake|Kolkata|West Bengal|700016|4.6|15|Dr. Arjun Das,Dr. Meera Banerjee,Dr. Sanjay Chatterjee|Surgical Dermatology,Cosmetic Treatments,Medical Dermatology|033-2456-7890|fortis-skin.in
+DOCTOR|Dr. Arjun Das|Surgical Dermatology|18|4.8|Available|07:00-15:00|Mohs Surgery,Skin Cancer Removal,Reconstructive Surgery
+DOCTOR|Dr. Meera Banerjee|Cosmetic Dermatology|10|4.6|Available|09:00-17:00|Laser Treatments,Anti-Aging,Fillers,Botox
+DOCTOR|Dr. Sanjay Chatterjee|General Dermatology|7|4.5|Available|08:00-16:00|Acne Treatment,Skin Allergies,Routine Care
+
+HOSPITAL|Max Healthcare Dermatology|45 Brigade Road, MG Road|Bangalore|Karnataka|560001|4.9|22|Dr. Kavitha Reddy,Dr. Ravi Krishnan,Dr. Lakshmi Nair,Dr. Vikram Rao|Dermatopathology,Research,Advanced Treatments|080-3456-7891|max-derm.in
+DOCTOR|Dr. Kavitha Reddy|Dermatopathology|18|4.9|Available|08:00-16:00|Skin Biopsy,Cancer Diagnosis,Pathology Analysis
+DOCTOR|Dr. Ravi Krishnan|Cosmetic Dermatology|22|4.8|Busy|09:00-17:00|Aesthetic Procedures,Laser Surgery,Anti-Aging
+DOCTOR|Dr. Lakshmi Nair|Medical Dermatology|14|4.7|Available|07:00-15:00|Chronic Skin Conditions,Immunodermatology,Psoriasis
+DOCTOR|Dr. Vikram Rao|Pediatric Dermatology|9|4.6|Available|10:00-18:00|Pediatric Skin Care,Genetic Skin Disorders
+
+HOSPITAL|Manipal Dermatology Institute|67 Anna Salai, T Nagar|Chennai|Tamil Nadu|600017|4.7|20|Dr. Deepika Iyer,Dr. Suresh Pillai,Dr. Anitha Raman|General Care,Cosmetic Services,Medical Dermatology|044-4567-8901|manipal-derm.in
+DOCTOR|Dr. Deepika Iyer|General Dermatology|16|4.7|Available|08:00-16:00|Routine Skin Care,Mole Checks,Skin Screening
+DOCTOR|Dr. Suresh Pillai|Cosmetic Dermatology|11|4.4|Available|09:00-17:00|Injectable Treatments,Skin Rejuvenation,Facials
+DOCTOR|Dr. Anitha Raman|Medical Dermatology|13|4.6|Available|07:00-15:00|Skin Cancer Treatment,Dermatitis Care
+
+HOSPITAL|Kokilaben Skin Center|89 Linking Road, Bandra|Mumbai|Maharashtra|400050|4.8|25|Dr. Rohit Joshi,Dr. Neha Desai,Dr. Kiran Patil,Dr. Varun Shah|Medical Dermatology,Surgical Procedures,Cosmetic Care|022-5678-9012|kokilaben-skin.in
+DOCTOR|Dr. Rohit Joshi|Medical Dermatology|19|4.8|Available|07:00-15:00|Skin Cancer Treatment,Complex Dermatology,Immunotherapy
+DOCTOR|Dr. Neha Desai|Surgical Dermatology|13|4.6|Busy|08:00-16:00|Reconstructive Surgery,Skin Grafts,Tumor Removal
+DOCTOR|Dr. Kiran Patil|Cosmetic Dermatology|6|4.5|Available|10:00-18:00|Facial Treatments,Body Contouring,Laser Therapy
+DOCTOR|Dr. Varun Shah|General Dermatology|15|4.7|Available|08:00-17:00|Acne Treatment,Skin Cancer Screening,Eczema Care
+
+HOSPITAL|AIIMS Dermatology Wing|12 Safdarjung Enclave|New Delhi|Delhi|110029|4.9|30|Dr. Ashok Gupta,Dr. Rekha Singh,Dr. Manoj Agarwal,Dr. Pooja Sharma|Government Hospital,Research,Teaching|011-6789-0123|aiims-derm.gov.in
+DOCTOR|Dr. Ashok Gupta|Dermatopathology|25|4.9|Available|08:00-16:00|Research,Diagnostic Services,Clinical Trials
+DOCTOR|Dr. Rekha Singh|Medical Dermatology|20|4.8|Available|07:00-15:00|Complex Medical Cases,Research Studies
+DOCTOR|Dr. Manoj Agarwal|Cosmetic Dermatology|18|4.7|Available|09:00-18:00|Aesthetic Research,Advanced Procedures
+DOCTOR|Dr. Pooja Sharma|Surgical Dermatology|22|4.8|Busy|08:00-17:00|Surgical Innovation,Reconstructive Procedures
+
+HOSPITAL|Narayana Health Skin Clinic|34 Hosur Road, Electronic City|Bangalore|Karnataka|560100|4.6|16|Dr. Harish Kumar,Dr. Shweta Rao,Dr. Ganesh Murthy|Comprehensive Dermatology,Pediatric Care|080-7890-1234|narayana-skin.in
+DOCTOR|Dr. Harish Kumar|General Dermatology|13|4.7|Available|08:00-17:00|Acne Treatment,Skin Cancer Screening,Eczema Care
+DOCTOR|Dr. Shweta Rao|Pediatric Dermatology|9|4.8|Available|09:00-16:00|Children's Skin Conditions,Allergic Reactions
+DOCTOR|Dr. Ganesh Murthy|Cosmetic Dermatology|11|4.5|Busy|10:00-18:00|Botox,Fillers,Chemical Peels
+
+HOSPITAL|Ruby Hall Dermatology|56 Sassoon Road, Pune Camp|Pune|Maharashtra|411001|4.7|19|Dr. Madhuri Jain,Dr. Rahul Kulkarni,Dr. Sneha Deshpande|Medical Treatments,Skin Surgery,Cosmetic Care|020-8901-2345|rubyhall-derm.in
+DOCTOR|Dr. Madhuri Jain|Medical Dermatology|15|4.6|Available|07:00-15:00|Psoriasis Treatment,Skin Infections,Chronic Conditions
+DOCTOR|Dr. Rahul Kulkarni|Surgical Dermatology|18|4.7|Available|08:00-16:00|Mohs Surgery,Skin Cancer Removal
+DOCTOR|Dr. Sneha Deshpande|Cosmetic Dermatology|12|4.5|Available|09:00-17:00|Laser Treatments,Anti-Aging Procedures
+
+HOSPITAL|Medanta Skin Institute|78 Golf Course Road, Sector 38|Gurgaon|Haryana|122001|4.8|24|Dr. Vinod Malhotra,Dr. Seema Kapoor,Dr. Ajay Thakur,Dr. Nisha Ahluwalia|Luxury Cosmetic Care,Advanced Aesthetics|0124-9012-3456|medanta-skin.in
+DOCTOR|Dr. Vinod Malhotra|Cosmetic Dermatology|25|4.9|Available|09:00-18:00|Advanced Laser Treatments,Facial Rejuvenation,Body Sculpting
+DOCTOR|Dr. Seema Kapoor|Aesthetic Medicine|18|4.8|Available|08:00-17:00|Injectable Treatments,Skin Tightening,Anti-Aging
+DOCTOR|Dr. Ajay Thakur|Dermatologic Surgery|20|4.9|Busy|07:00-16:00|Cosmetic Surgery,Scar Revision,Skin Reconstruction
+DOCTOR|Dr. Nisha Ahluwalia|Medical Aesthetics|12|4.7|Available|10:00-19:00|Chemical Peels,Microneedling,Skin Analysis
+
+HOSPITAL|Sankara Nethralaya Skin Care|91 College Road, Nungambakkam|Chennai|Tamil Nadu|600006|4.5|14|Dr. Ramesh Babu,Dr. Geetha Krishnan,Dr. Arun Subramanian|Family Dermatology,Comprehensive Care|044-0123-4567|sankara-skin.in
+DOCTOR|Dr. Ramesh Babu|General Dermatology|17|4.6|Available|08:00-17:00|Family Care,Skin Cancer Screening,Mole Removal
+DOCTOR|Dr. Geetha Krishnan|Pediatric Dermatology|10|4.7|Available|09:00-16:00|Children's Dermatology,Birthmark Treatment
+DOCTOR|Dr. Arun Subramanian|Medical Dermatology|13|4.5|Available|07:00-15:00|Chronic Skin Conditions,Psoriasis Care
+
+HOSPITAL|Wockhardt Dermatology Center|123 Central Avenue, Hiranandani|Mumbai|Maharashtra|400076|4.6|17|Dr. Sachin Patwardhan,Dr. Manisha Bhatt,Dr. Nitin Sawant|Research-Based Care,Clinical Trials|022-1234-5678|wockhardt-derm.in
+DOCTOR|Dr. Sachin Patwardhan|Dermatopathology|20|4.8|Available|08:00-16:00|Skin Biopsy,Cancer Research,Diagnostic Services
+DOCTOR|Dr. Manisha Bhatt|Medical Dermatology|16|4.7|Available|07:00-15:00|Autoimmune Skin Conditions,Clinical Research
+DOCTOR|Dr. Nitin Sawant|Cosmetic Dermatology|12|4.6|Busy|09:00-18:00|Advanced Aesthetics,Laser Technology
+
+HOSPITAL|Jaslok Skin Specialists|145 Dr. G Deshmukh Marg, Pedder Road|Mumbai|Maharashtra|400026|4.7|21|Dr. Ranjan Shetty,Dr. Kavita Nambiar,Dr. Sunil Menon|Suburban Family Care,Comprehensive Services|022-2345-6789|jaslok-skin.in
+DOCTOR|Dr. Ranjan Shetty|General Dermatology|14|4.7|Available|08:00-17:00|Family Dermatology,Preventive Care,Skin Health
+DOCTOR|Dr. Kavita Nambiar|Cosmetic Dermatology|11|4.5|Available|09:00-18:00|Aesthetic Treatments,Skin Rejuvenation
+DOCTOR|Dr. Sunil Menon|Medical Dermatology|15|4.6|Available|07:00-16:00|Skin Cancer Treatment,Chronic Conditions
+
+HOSPITAL|Christian Medical College Dermatology|167 Ida Scudder Road, Vellore|Vellore|Tamil Nadu|632004|4.8|28|Dr. Samuel David,Dr. Mary Thomas,Dr. John Abraham,Dr. Sarah Jacob|Rural Healthcare,Telemedicine,Medical Education|0416-3456-7890|cmc-vellore-derm.edu
+DOCTOR|Dr. Samuel David|General Dermatology|18|4.5|Available|08:00-16:00|Rural Dermatology,Telemedicine Consultations
+DOCTOR|Dr. Mary Thomas|Medical Dermatology|13|4.6|Available|09:00-17:00|Skin Cancer Care,Chronic Disease Management
+DOCTOR|Dr. John Abraham|Cosmetic Dermatology|9|4.4|Busy|10:00-18:00|Basic Aesthetic Procedures,Skin Care
+DOCTOR|Dr. Sarah Jacob|Pediatric Dermatology|11|4.7|Available|08:00-16:00|Children's Skin Care,Genetic Disorders
+
+HOSPITAL|Sree Chitra Institute Dermatology|189 Medical College Road, Thiruvananthapuram|Thiruvananthapuram|Kerala|695011|4.5|16|Dr. Radhika Nair,Dr. Krishnan Pillai,Dr. Suma Devi|Government District Care,Insurance Friendly|0471-4567-8901|sctimst-derm.gov.in
+DOCTOR|Dr. Radhika Nair|General Dermatology|16|4.6|Available|08:00-17:00|Comprehensive Care,Insurance Coverage
+DOCTOR|Dr. Krishnan Pillai|Medical Dermatology|12|4.5|Available|07:00-15:00|Skin Cancer Treatment,Medical Dermatology
+DOCTOR|Dr. Suma Devi|Pediatric Dermatology|8|4.7|Available|09:00-16:00|Children's Skin Care,Family Services
+
+HOSPITAL|King George Medical University Dermatology|201 Shah Mina Road, Chowk|Lucknow|Uttar Pradesh|226003|4.4|18|Dr. Rajendra Prasad,Dr. Sunita Devi,Dr. Ashish Tiwari|Western UP Care,Government Hospital|0522-5678-9012|kgmu-derm.ac.in
+DOCTOR|Dr. Rajendra Prasad|General Dermatology|14|4.4|Available|08:00-16:00|Government Healthcare,Affordable Treatments
+DOCTOR|Dr. Sunita Devi|Medical Dermatology|11|4.5|Available|09:00-17:00|Skin Cancer Screening,Preventive Care
+DOCTOR|Dr. Ashish Tiwari|Cosmetic Dermatology|7|4.3|Busy|10:00-18:00|Basic Cosmetic Procedures,Skin Health
+
+HOSPITAL|Postgraduate Institute Dermatology|223 Sector 12, Chandigarh|Chandigarh|Chandigarh|160012|4.6|20|Dr. Harpreet Singh,Dr. Simran Kaur,Dr. Jasbir Singh,Dr. Manpreet Kaur|University Affiliated,Research Focus|0172-6789-0123|pgi-derm.edu.in
+DOCTOR|Dr. Harpreet Singh|Dermatopathology|19|4.8|Available|08:00-16:00|Research,Diagnostic Services,Clinical Trials
+DOCTOR|Dr. Simran Kaur|Medical Dermatology|15|4.7|Available|07:00-15:00|Complex Medical Cases,Research Studies
+DOCTOR|Dr. Jasbir Singh|Cosmetic Dermatology|10|4.6|Available|09:00-18:00|Aesthetic Research,Advanced Procedures
+DOCTOR|Dr. Manpreet Kaur|Surgical Dermatology|17|4.7|Busy|08:00-17:00|Surgical Innovation,Reconstructive Procedures
+
+HOSPITAL|Nizam Institute of Medical Sciences Dermatology|245 Punjagutta, Hyderabad|Hyderabad|Telangana|500082|4.7|23|Dr. Venkat Reddy,Dr. Padmaja Rani,Dr. Srinivas Rao,Dr. Lakshmi Prasanna|Advanced Research,Specialty Care|040-7890-1234|nims-derm.ac.in
+DOCTOR|Dr. Venkat Reddy|Medical Dermatology|21|4.8|Available|07:00-15:00|Advanced Medical Dermatology,Research
+DOCTOR|Dr. Padmaja Rani|Cosmetic Dermatology|16|4.7|Available|09:00-18:00|Aesthetic Procedures,Laser Treatments
+DOCTOR|Dr. Srinivas Rao|Surgical Dermatology|18|4.8|Available|08:00-16:00|Complex Surgical Procedures
+DOCTOR|Dr. Lakshmi Prasanna|Pediatric Dermatology|12|4.6|Busy|10:00-17:00|Children's Dermatology,Genetic Conditions
+
+HOSPITAL|Sanjay Gandhi Postgraduate Institute Dermatology|267 Raebareli Road, Lucknow|Lucknow|Uttar Pradesh|226014|4.5|19|Dr. Alok Srivastava,Dr. Usha Sharma,Dr. Dinesh Gupta|Government Medical College,Research|0522-8901-2345|sgpgi-derm.ac.in
+DOCTOR|Dr. Alok Srivastava|General Dermatology|17|4.6|Available|08:00-16:00|Government Healthcare,Medical Education
+DOCTOR|Dr. Usha Sharma|Medical Dermatology|14|4.5|Available|09:00-17:00|Chronic Skin Conditions,Research
+DOCTOR|Dr. Dinesh Gupta|Cosmetic Dermatology|10|4.4|Available|10:00-18:00|Basic Aesthetic Care,Skin Health
+
+HOSPITAL|Tata Memorial Hospital Dermatology|289 Dr. E Borges Road, Parel|Mumbai|Maharashtra|400012|4.8|26|Dr. Prakash Joshi,Dr. Shilpa Kulkarni,Dr. Anil Deshmukh,Dr. Ritu Agarwal|Cancer Specialization,Research Hospital|022-9012-3456|tmc-derm.gov.in
+DOCTOR|Dr. Prakash Joshi|Dermatopathology|23|4.9|Available|08:00-16:00|Cancer Research,Diagnostic Excellence
+DOCTOR|Dr. Shilpa Kulkarni|Medical Dermatology|19|4.8|Available|07:00-15:00|Skin Cancer Treatment,Oncology
+DOCTOR|Dr. Anil Deshmukh|Surgical Dermatology|21|4.8|Busy|08:00-17:00|Cancer Surgery,Reconstructive Procedures
+DOCTOR|Dr. Ritu Agarwal|General Dermatology|15|4.7|Available|09:00-18:00|Cancer Prevention,Screening Programs
