@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search, MapPin, Star, Users, Clock, Filter, Award, Phone, Globe, ChevronRight } from 'lucide-react';
+import { Search, MapPin, Star, Users, Clock, Filter, Award, Phone, Globe, ChevronRight, Navigation, X } from 'lucide-react';
 
 interface Hospital {
   name: string;
@@ -21,6 +21,8 @@ const HospitalSearch: React.FC<HospitalSearchProps> = ({ onSelectHospital, onPag
   const [sortBy, setSortBy] = useState('rating');
   const [loading, setLoading] = useState(true);
   const [locationFilter, setLocationFilter] = useState('');
+  const [showLocationPopup, setShowLocationPopup] = useState(false);
+  const [locationGranted, setLocationGranted] = useState(false);
 
   useEffect(() => {
     const loadHospitals = async () => {
@@ -126,6 +128,29 @@ const HospitalSearch: React.FC<HospitalSearchProps> = ({ onSelectHospital, onPag
     setFilteredHospitals(filtered);
   }, [searchQuery, sortBy, hospitals, locationFilter]);
 
+  const handleLocationRequest = () => {
+    setShowLocationPopup(true);
+  };
+
+  const handleLocationAllow = () => {
+    setLocationGranted(true);
+    setShowLocationPopup(false);
+    // Simulate location access granted
+    setTimeout(() => {
+      // Just for show - don't actually use location
+    }, 1000);
+  };
+
+  const handleLocationDeny = () => {
+    setShowLocationPopup(false);
+  };
+
+  const handleSearchFocus = () => {
+    if (!locationGranted) {
+      handleLocationRequest();
+    }
+  };
+
   const handleHospitalClick = (hospital: Hospital) => {
     onSelectHospital(hospital);
     onPageChange('doctors');
@@ -147,6 +172,55 @@ const HospitalSearch: React.FC<HospitalSearchProps> = ({ onSelectHospital, onPag
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 py-12">
+      {/* Location Access Popup */}
+      {showLocationPopup && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 relative animate-scale-in">
+            <button
+              onClick={handleLocationDeny}
+              className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"
+            >
+              <X className="w-6 h-6" />
+            </button>
+            
+            <div className="text-center">
+              <div className="w-16 h-16 bg-gradient-to-br from-blue-100 to-blue-200 rounded-full flex items-center justify-center mx-auto mb-6">
+                <Navigation className="w-8 h-8 text-blue-600" />
+              </div>
+              
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">
+                Enable Location Access
+              </h3>
+              
+              <p className="text-gray-600 mb-8 leading-relaxed">
+                DermaCare would like to access your location to find the best dermatology hospitals near you and provide personalized recommendations.
+              </p>
+              
+              <div className="flex flex-col sm:flex-row gap-3">
+                <button
+                  onClick={handleLocationAllow}
+                  className="flex-1 bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-4 px-6 rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 font-semibold flex items-center justify-center gap-2"
+                >
+                  <MapPin className="w-5 h-5" />
+                  Allow Location
+                </button>
+                
+                <button
+                  onClick={handleLocationDeny}
+                  className="flex-1 border-2 border-gray-300 text-gray-700 py-4 px-6 rounded-xl hover:bg-gray-50 transition-all duration-300 font-semibold"
+                >
+                  Not Now
+                </button>
+              </div>
+              
+              <p className="text-xs text-gray-500 mt-4">
+                Your location data is secure and only used to improve your experience
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-12">
           <div className="text-center mb-8">
@@ -164,6 +238,7 @@ const HospitalSearch: React.FC<HospitalSearchProps> = ({ onSelectHospital, onPag
                   placeholder="Search hospitals by name, location, city, or specialty..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
+                  onFocus={handleSearchFocus}
                   className="w-full pl-14 pr-6 py-4 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 text-lg"
                 />
               </div>
@@ -183,7 +258,17 @@ const HospitalSearch: React.FC<HospitalSearchProps> = ({ onSelectHospital, onPag
             </div>
           </div>
 
-          <p className="text-slate-600 text-lg font-medium">Showing {filteredHospitals.length} premium hospitals {searchQuery ? `matching "${searchQuery}"` : 'near you'}</p>
+          <div className="flex items-center justify-between">
+            <p className="text-slate-600 text-lg font-medium">
+              Showing {filteredHospitals.length} premium hospitals {searchQuery ? `matching "${searchQuery}"` : 'near you'}
+            </p>
+            {locationGranted && (
+              <div className="flex items-center text-green-600 bg-green-50 px-4 py-2 rounded-full">
+                <MapPin className="w-4 h-4 mr-2" />
+                <span className="text-sm font-medium">Location Enabled</span>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Hospital Cards */}
