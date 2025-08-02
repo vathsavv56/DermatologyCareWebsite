@@ -12,8 +12,7 @@ const Navigation: React.FC<NavigationProps> = ({ currentPage, onPageChange }) =>
     { id: 'search', label: 'Find Hospitals', icon: Search },
     { id: 'symptom-checker', label: 'Symptom Checker', icon: Stethoscope },
     { id: 'appointments', label: 'My Appointments', icon: Calendar },
-    { id: 'chat', label: 'Live Chat', icon: MessageCircle },
-    { id: 'profile', label: 'Profile', icon: User }
+    { id: 'chat', label: 'Live Chat', icon: MessageCircle }
   ];
 
   return (

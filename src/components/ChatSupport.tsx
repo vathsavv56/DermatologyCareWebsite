@@ -16,32 +16,43 @@ const ChatSupport: React.FC<ChatSupportProps> = ({ onPageChange }) => {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: 1,
-      text: "Hello! I'm your virtual dermatology assistant. How can I help you today?",
+      text: "🙏 Namaste! I'm Dr. AI, your virtual dermatology assistant. I'm here to help you with any skin care questions or appointment bookings. How may I assist you today?",
       sender: 'bot',
       timestamp: new Date()
     }
   ]);
   const [newMessage, setNewMessage] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+  const [isOnline, setIsOnline] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const quickReplies = [
-    "How do I book an appointment?",
-    "What should I expect during my first visit?",
-    "Do you accept insurance?",
-    "What are your hours?",
-    "Emergency skin concerns"
+    "How to book appointment?",
+    "Find dermatologists near me",
+    "Skin care tips",
+    "Emergency consultation",
+    "Insurance coverage",
+    "Telemedicine options"
   ];
 
   const botResponses: { [key: string]: string } = {
-    "hello": "Hi there! I'm here to help with any questions about dermatology services, appointments, or skin concerns.",
-    "appointment": "To book an appointment, you can search for dermatologists in your area using our 'Find Hospitals' feature, select a doctor, and choose your preferred time slot.",
-    "hours": "Most of our partner dermatologists are available Monday through Friday, 8 AM to 6 PM. Some also offer weekend appointments.",
-    "insurance": "Insurance coverage varies by provider and location. Please contact your chosen dermatologist's office directly to verify your insurance is accepted.",
-    "emergency": "For urgent skin concerns like severe allergic reactions, rapidly changing moles, or signs of infection, please seek immediate medical attention or call emergency services.",
-    "first visit": "During your first visit, the dermatologist will review your medical history, examine your skin concern, and discuss treatment options. The appointment typically takes 30-45 minutes.",
-    "default": "I understand your concern. For specific medical questions, I recommend consulting with one of our certified dermatologists. Would you like me to help you find one nearby?"
+    "hello": "🙏 Namaste! I'm Dr. AI, your dedicated dermatology assistant. I can help you find the best skin specialists across India, book appointments, or answer your skin care questions. What would you like to know?",
+    "appointment": "📅 Booking is super easy! Just click 'Find Hospitals' → Select your city → Choose a dermatologist → Pick your preferred time slot. We have 500+ certified doctors across 150+ hospitals in India!",
+    "hours": "🕐 Our partner hospitals operate 24/7! Most dermatologists are available Mon-Sat, 9 AM to 6 PM. Many also offer evening and weekend slots for your convenience.",
+    "insurance": "💳 Most of our partner hospitals accept major insurance plans including CGHS, ECHS, and private insurers. Please verify with your chosen hospital during booking.",
+    "emergency": "🚨 For urgent skin emergencies like severe allergic reactions, rapidly spreading rashes, or suspicious mole changes, please visit the nearest emergency room or call 102 immediately!",
+    "telemedicine": "💻 Yes! We offer secure video consultations with certified dermatologists. Perfect for follow-ups, prescription renewals, and non-emergency consultations from home.",
+    "tips": "✨ Daily skin care tips: Use sunscreen SPF 30+, moisturize twice daily, drink plenty of water, eat antioxidant-rich foods, and avoid harsh scrubbing. Need personalized advice? Book a consultation!",
+    "default": "🤔 That's a great question! For personalized medical advice, I recommend consulting with one of our board-certified dermatologists. Shall I help you find one in your area?"
   };
+
+  // Simulate online status changes
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIsOnline(Math.random() > 0.1); // 90% uptime simulation
+    }, 30000);
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     scrollToBottom();
@@ -110,52 +121,63 @@ const ChatSupport: React.FC<ChatSupportProps> = ({ onPageChange }) => {
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-white rounded-xl shadow-lg overflow-hidden h-[calc(100vh-8rem)]">
+        <div className="bg-white rounded-2xl shadow-2xl overflow-hidden h-[calc(100vh-8rem)] border border-slate-200">
           {/* Header */}
-          <div className="bg-blue-600 text-white p-6">
+          <div className="bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-800 text-white p-6 relative overflow-hidden">
+            <div className="absolute inset-0 bg-black/10"></div>
+            <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-16 translate-x-16"></div>
+            
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
-                <MessageCircle className="w-6 h-6" />
+              <div className="relative">
+                <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center shadow-lg">
+                  <MessageCircle className="w-6 h-6" />
+                </div>
+                <div className={`absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-white ${isOnline ? 'bg-green-400' : 'bg-red-400'}`}></div>
               </div>
-              <div>
-                <h1 className="text-xl font-bold">Live Chat Support</h1>
-                <p className="text-blue-100">Get instant help with your skin care questions</p>
+              <div className="relative z-10">
+                <h1 className="text-2xl font-bold">Dr. AI - Live Support</h1>
+                <div className="flex items-center space-x-2">
+                  <div className={`w-2 h-2 rounded-full ${isOnline ? 'bg-green-400' : 'bg-red-400'} animate-pulse`}></div>
+                  <p className="text-blue-100 font-medium">
+                    {isOnline ? 'Online • Instant responses' : 'Reconnecting...'}
+                  </p>
+                </div>
               </div>
             </div>
           </div>
 
           {/* Messages */}
-          <div className="flex-1 overflow-y-auto p-6 space-y-4" style={{ height: 'calc(100% - 200px)' }}>
+          <div className="flex-1 overflow-y-auto p-6 space-y-6 bg-gradient-to-b from-slate-50 to-white" style={{ height: 'calc(100% - 220px)' }}>
             {messages.map((message) => (
               <div
                 key={message.id}
-                className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+                className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'} animate-fade-in`}
               >
-                <div className={`flex items-start space-x-3 max-w-xs lg:max-w-md`}>
+                <div className={`flex items-start space-x-3 max-w-sm lg:max-w-lg`}>
                   {message.sender === 'bot' && (
-                    <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
+                    <div className="w-10 h-10 bg-gradient-to-br from-blue-100 to-blue-200 rounded-full flex items-center justify-center flex-shrink-0 shadow-md">
                       <Bot className="w-5 h-5 text-blue-600" />
                     </div>
                   )}
                   
                   <div>
                     <div
-                      className={`px-4 py-3 rounded-lg ${
+                      className={`px-5 py-4 rounded-2xl shadow-md ${
                         message.sender === 'user'
-                          ? 'bg-blue-600 text-white rounded-br-sm'
-                          : 'bg-gray-100 text-gray-900 rounded-bl-sm'
+                          ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-br-md'
+                          : 'bg-white text-gray-900 rounded-bl-md border border-slate-200'
                       }`}
                     >
-                      <p className="text-sm">{message.text}</p>
+                      <p className="text-sm leading-relaxed">{message.text}</p>
                     </div>
-                    <div className="flex items-center mt-1 space-x-1">
+                    <div className="flex items-center mt-2 space-x-1">
                       <Clock className="w-3 h-3 text-gray-400" />
-                      <span className="text-xs text-gray-500">{formatTime(message.timestamp)}</span>
+                      <span className="text-xs text-gray-500 font-medium">{formatTime(message.timestamp)}</span>
                     </div>
                   </div>
 
                   {message.sender === 'user' && (
-                    <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
+                    <div className="w-10 h-10 bg-gradient-to-br from-green-100 to-green-200 rounded-full flex items-center justify-center flex-shrink-0 shadow-md">
                       <User className="w-5 h-5 text-green-600" />
                     </div>
                   )}
@@ -166,14 +188,14 @@ const ChatSupport: React.FC<ChatSupportProps> = ({ onPageChange }) => {
             {isTyping && (
               <div className="flex justify-start">
                 <div className="flex items-start space-x-3">
-                  <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                  <div className="w-10 h-10 bg-gradient-to-br from-blue-100 to-blue-200 rounded-full flex items-center justify-center shadow-md">
                     <Bot className="w-5 h-5 text-blue-600" />
                   </div>
-                  <div className="bg-gray-100 px-4 py-3 rounded-lg rounded-bl-sm">
+                  <div className="bg-white px-5 py-4 rounded-2xl rounded-bl-md shadow-md border border-slate-200">
                     <div className="flex space-x-1">
-                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                      <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce"></div>
+                      <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                      <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
                     </div>
                   </div>
                 </div>
@@ -183,14 +205,14 @@ const ChatSupport: React.FC<ChatSupportProps> = ({ onPageChange }) => {
           </div>
 
           {/* Quick Replies */}
-          <div className="px-6 py-2 border-t bg-gray-50">
-            <p className="text-xs text-gray-600 mb-2">Quick responses:</p>
-            <div className="flex flex-wrap gap-2">
+          <div className="px-6 py-4 border-t bg-gradient-to-r from-slate-50 to-blue-50">
+            <p className="text-xs text-gray-600 mb-3 font-semibold">💬 Quick responses:</p>
+            <div className="flex flex-wrap gap-2 max-h-20 overflow-y-auto">
               {quickReplies.map((reply, index) => (
                 <button
                   key={index}
                   onClick={() => handleSendMessage(reply)}
-                  className="bg-white text-gray-700 text-xs px-3 py-1 rounded-full border hover:bg-blue-50 hover:border-blue-300 transition-colors"
+                  className="bg-white text-gray-700 text-xs px-4 py-2 rounded-full border border-slate-200 hover:bg-blue-50 hover:border-blue-300 hover:text-blue-700 transition-all duration-200 shadow-sm hover:shadow-md font-medium"
                 >
                   {reply}
                 </button>
@@ -199,20 +221,20 @@ const ChatSupport: React.FC<ChatSupportProps> = ({ onPageChange }) => {
           </div>
 
           {/* Input */}
-          <div className="p-6 border-t">
-            <div className="flex space-x-3">
+          <div className="p-6 border-t bg-white">
+            <div className="flex space-x-4">
               <input
                 type="text"
                 value={newMessage}
                 onChange={(e) => setNewMessage(e.target.value)}
                 onKeyPress={handleKeyPress}
-                placeholder="Type your message..."
-                className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="Ask me anything about skin care or appointments..."
+                className="flex-1 px-5 py-4 border border-slate-300 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 text-sm font-medium shadow-sm"
               />
               <button
                 onClick={() => handleSendMessage()}
                 disabled={!newMessage.trim()}
-                className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
+                className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-8 py-4 rounded-2xl hover:from-blue-700 hover:to-blue-800 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 disabled:transform-none"
               >
                 <Send className="w-5 h-5" />
               </button>
