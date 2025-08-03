@@ -1,16 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Search, MapPin, Star, Users, Clock, Filter, Award, Phone, Globe, ChevronRight, Navigation, X } from 'lucide-react';
-
-interface Hospital {
-  name: string;
-  address: string;
-  rating: number;
-  doctorCount: number;
-  doctors: string[];
-}
+import { searchHospitals, Hospital } from '../lib/supabase';
 
 interface HospitalSearchProps {
-  onSelectHospital: (hospital: Hospital) => void;
+  onSelectHospital: (hospital: any) => void;
   onPageChange: (page: string) => void;
 }
 
@@ -25,108 +18,50 @@ const HospitalSearch: React.FC<HospitalSearchProps> = ({ onSelectHospital, onPag
   const [locationGranted, setLocationGranted] = useState(false);
 
   useEffect(() => {
-    const loadHospitals = async () => {
-      try {
-        const response = await fetch('/src/data/hospitals.txt');
-        const text = await response.text();
-        const parsedHospitals = parseHospitalData(text);
-        setHospitals(parsedHospitals);
-        setFilteredHospitals(parsedHospitals);
-        setLoading(false);
-      } catch (error) {
-        console.error('Error loading hospital data:', error);
-        // Fallback data
-        const fallbackData = [
-          {
-            name: 'Metro Dermatology Center',
-            address: '123 Main St, Downtown',
-            rating: 4.8,
-            doctorCount: 15,
-            doctors: ['Dr. Sarah Johnson', 'Dr. Michael Chen', 'Dr. Emily Rodriguez']
-          },
-          {
-            name: 'City Skin Clinic',
-            address: '456 Oak Avenue, Midtown',
-            rating: 4.6,
-            doctorCount: 12,
-            doctors: ['Dr. James Wilson', 'Dr. Lisa Thompson', 'Dr. David Park']
-          }
-        ];
-        setHospitals(fallbackData);
-        setFilteredHospitals(fallbackData);
-        setLoading(false);
-      }
-    };
-
-    loadHospitals();
+    // Load initial hospitals on component mount
+    handleSearch('');
   }, []);
 
-  const parseHospitalData = (text: string): Hospital[] => {
-    const lines = text.split('\n').filter(line => line.trim());
-    const hospitals: Hospital[] = [];
-    
-    for (const line of lines) {
-      if (line.startsWith('HOSPITAL|')) {
-        const parts = line.split('|');
-        if (parts.length >= 11) {
-          hospitals.push({
-            name: parts[1],
-            address: `${parts[2]}, ${parts[3]}, ${parts[4]} ${parts[5]}`,
-            rating: parseFloat(parts[6]),
-            doctorCount: parseInt(parts[7]),
-            doctors: parts[8] ? parts[8].split(',') : [],
-            city: parts[3],
-            state: parts[4],
-            zipCode: parts[5],
-            specialties: parts[9] ? parts[9].split(',') : [],
-            phone: parts[10],
-            website: parts[11] || ''
-          });
-        }
-      }
+  const handleSearch = async (query: string) => {
+    setLoading(true);
+    try {
+      const results = await searchHospitals(query);
+      setHospitals(results);
+      setFilteredHospitals(results);
+    } catch (error) {
+      console.error('Error searching hospitals:', error);
+    } finally {
+      setLoading(false);
     }
-    
-    return hospitals;
   };
 
   useEffect(() => {
-    let filtered = hospitals;
-    
-    // Always show 7-10 random hospitals regardless of search
-    const shuffled = [...hospitals].sort(() => 0.5 - Math.random());
-    const randomCount = Math.floor(Math.random() * 4) + 7; // Random number between 7-10
-    filtered = shuffled.slice(0, randomCount);
-    
-    // Apply search query filter
-    if (searchQuery.trim()) {
-      // Still filter but from the random selection
-      filtered = shuffled.filter(hospital => 
-        hospital.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        hospital.address.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (hospital as any).city?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (hospital as any).state?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (hospital as any).specialties?.some((specialty: string) => 
-          specialty.toLowerCase().includes(searchQuery.toLowerCase())
-        )
-      ).slice(0, randomCount);
-    }
-    
-    // Sort hospitals
-    filtered.sort((a, b) => {
-      switch (sortBy) {
-        case 'rating':
-          return b.rating - a.rating;
-        case 'doctors':
-          return b.doctorCount - a.doctorCount;
-        case 'name':
-          return a.name.localeCompare(b.name);
-        default:
-          return 0;
-      }
-    });
+    // Debounce search
+    const timeoutId = setTimeout(() => {
+      handleSearch(searchQuery);
+    }, 500);
 
-    setFilteredHospitals(filtered);
-  }, [searchQuery, sortBy, hospitals, locationFilter]);
+    return () => clearTimeout(timeoutId);
+  }, [searchQuery]);
+
+  useEffect(() => {
+    // Apply sorting to current results
+    let sorted = [...hospitals];
+    
+    switch (sortBy) {
+      case 'rating':
+        sorted.sort((a, b) => b.rating - a.rating);
+        break;
+      case 'doctors':
+        sorted.sort((a, b) => b.doctor_count - a.doctor_count);
+        break;
+      case 'name':
+        sorted.sort((a, b) => a.name.localeCompare(b.name));
+        break;
+    }
+
+    setFilteredHospitals(sorted);
+  }, [sortBy, hospitals]);
 
   const handleLocationRequest = () => {
     setShowLocationPopup(true);
@@ -300,14 +235,14 @@ const HospitalSearch: React.FC<HospitalSearchProps> = ({ onSelectHospital, onPag
                 
                   <div className="flex items-center text-slate-600 mb-6">
                     <MapPin className="w-5 h-5 mr-3 text-blue-500" />
-                    <span className="font-medium">{hospital.address}</span>
+                    <span className="font-medium">{hospital.address}, {hospital.city}, {hospital.state}</span>
                   </div>
                 
                   <div className="grid grid-cols-2 gap-4 mb-6">
                     <div className="flex items-center bg-blue-50 px-4 py-3 rounded-xl">
                       <Users className="w-5 h-5 mr-3 text-blue-600" />
                       <div>
-                        <div className="font-bold text-blue-900">{hospital.doctorCount}</div>
+                        <div className="font-bold text-blue-900">{hospital.doctor_count}</div>
                         <div className="text-blue-600 text-sm">Doctors</div>
                       </div>
                     </div>
@@ -323,17 +258,17 @@ const HospitalSearch: React.FC<HospitalSearchProps> = ({ onSelectHospital, onPag
                   <div className="border-t border-slate-200 pt-6">
                     <p className="text-sm font-semibold text-slate-700 mb-3">Featured Specialists:</p>
                     <div className="flex flex-wrap gap-2 mb-4">
-                      {hospital.doctors.slice(0, 2).map((doctor, docIndex) => (
+                      {hospital.specialties?.slice(0, 2).map((specialty, specIndex) => (
                         <span
-                          key={docIndex}
+                          key={specIndex}
                           className="bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-800 text-sm px-3 py-1 rounded-full font-medium"
                         >
-                          {doctor}
+                          {specialty}
                         </span>
                       ))}
-                      {hospital.doctors.length > 2 && (
+                      {hospital.specialties && hospital.specialties.length > 2 && (
                         <span className="bg-slate-100 text-slate-600 text-sm px-3 py-1 rounded-full font-medium">
-                          +{hospital.doctors.length - 2} more
+                          +{hospital.specialties.length - 2} more
                         </span>
                       )}
                     </div>

@@ -1,26 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Star, Clock, Calendar, Video, Award, ArrowLeft } from 'lucide-react';
-
-interface Doctor {
-  name: string;
-  specialty: string;
-  experience: number;
-  rating: number;
-  status: string;
-  hours: string;
-  expertise: string[];
-}
-
-interface Hospital {
-  name: string;
-  address: string;
-  rating: number;
-  doctorCount: number;
-  doctors: string[];
-}
+import { getDoctorsByHospital, Doctor } from '../lib/supabase';
 
 interface DoctorListProps {
-  selectedHospital: Hospital | null;
+  selectedHospital: any;
   onBookAppointment: (doctor: Doctor, type: 'in-person' | 'telemedicine') => void;
   onPageChange: (page: string) => void;
 }
@@ -41,56 +24,17 @@ const DoctorList: React.FC<DoctorListProps> = ({ selectedHospital, onBookAppoint
   }, [selectedHospital]);
 
   const loadDoctors = async () => {
+    if (!selectedHospital?.id) return;
+    
+    setLoading(true);
     try {
-      const response = await fetch('/src/data/hospitals.txt');
-      const text = await response.text();
-      const parsedDoctors = parseDoctorData(text, selectedHospital?.name || '');
-      setDoctors(parsedDoctors);
-      setLoading(false);
+      const doctorData = await getDoctorsByHospital(selectedHospital.id);
+      setDoctors(doctorData);
     } catch (error) {
-      console.error('Error loading doctor data:', error);
-      // Fallback data
-      setDoctors([
-        {
-          name: 'Dr. Sarah Johnson',
-          specialty: 'Cosmetic Dermatology',
-          experience: 15,
-          rating: 4.9,
-          status: 'Available',
-          hours: '09:00-17:00',
-          expertise: ['General Dermatology', 'Botox', 'Chemical Peels']
-        }
-      ]);
+      console.error('Error loading doctors:', error);
+    } finally {
       setLoading(false);
     }
-  };
-
-  const parseDoctorData = (text: string, hospitalName: string): Doctor[] => {
-    const lines = text.split('\n').filter(line => line.trim());
-    const doctors: Doctor[] = [];
-    let currentHospital = '';
-    
-    for (const line of lines) {
-      if (line.startsWith('HOSPITAL|')) {
-        const parts = line.split('|');
-        currentHospital = parts[1];
-      } else if (line.startsWith('DOCTOR|') && currentHospital === hospitalName) {
-        const parts = line.split('|');
-        if (parts.length >= 8) {
-          doctors.push({
-            name: parts[1],
-            specialty: parts[2],
-            experience: parseInt(parts[3]),
-            rating: parseFloat(parts[4]),
-            status: parts[5],
-            hours: parts[6],
-            expertise: parts[7] ? parts[7].split(',').map(s => s.trim()) : []
-          });
-        }
-      }
-    }
-    
-    return doctors;
   };
 
   const updateDoctorAvailability = () => {
@@ -162,7 +106,7 @@ const DoctorList: React.FC<DoctorListProps> = ({ selectedHospital, onBookAppoint
                 <span className="font-medium">{selectedHospital.rating}</span>
               </div>
               <div className="text-gray-600">
-                {selectedHospital.doctorCount} Doctors Available
+                {selectedHospital.doctor_count} Doctors Available
               </div>
             </div>
           </div>
