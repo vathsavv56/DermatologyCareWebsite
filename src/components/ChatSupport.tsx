@@ -1,6 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Send, MessageCircle, Bot, User, Clock } from 'lucide-react';
 
+// Google Gemini AI API configuration
+const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
+const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent';
+
 interface Message {
   id: number;
   text: string;
@@ -74,6 +78,55 @@ const ChatSupport: React.FC<ChatSupportProps> = ({ onPageChange }) => {
     return botResponses.default;
   };
 
+  // Function to call Google Gemini AI API
+  const getGeminiResponse = async (message: string): Promise<string> => {
+    if (!GEMINI_API_KEY || GEMINI_API_KEY === 'your-gemini-api-key-here') {
+      console.warn('Gemini API key not configured, using fallback responses');
+      return getResponse(message);
+    }
+
+    try {
+      const response = await fetch(`${GEMINI_API_URL}?key=${GEMINI_API_KEY}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          contents: [{
+            parts: [{
+              text: `You are Dr. AI, a professional dermatology assistant for an Indian healthcare platform. 
+              Respond to this patient query in a helpful, professional manner. Keep responses concise and relevant to dermatology.
+              Always suggest consulting with certified dermatologists for serious concerns.
+              Patient query: ${message}`
+            }]
+          }],
+          generationConfig: {
+            temperature: 0.7,
+            topK: 40,
+            topP: 0.95,
+            maxOutputTokens: 200,
+          }
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`API request failed: ${response.status}`);
+      }
+
+      const data = await response.json();
+      
+      if (data.candidates && data.candidates[0] && data.candidates[0].content) {
+        return data.candidates[0].content.parts[0].text;
+      } else {
+        throw new Error('Invalid API response format');
+      }
+    } catch (error) {
+      console.error('Gemini API error:', error);
+      // Fallback to predefined responses
+      return getResponse(message);
+    }
+  };
+
   const handleSendMessage = async (text?: string) => {
     const messageText = text || newMessage.trim();
     if (!messageText) return;
@@ -89,11 +142,13 @@ const ChatSupport: React.FC<ChatSupportProps> = ({ onPageChange }) => {
     setNewMessage('');
     setIsTyping(true);
 
-    // Simulate bot typing delay
+    // Get AI response with typing delay
     setTimeout(() => {
+      const aiResponse = await getGeminiResponse(messageText);
+      
       const botResponse: Message = {
         id: messages.length + 2,
-        text: getResponse(messageText),
+        text: aiResponse,
         sender: 'bot',
         timestamp: new Date()
       };
@@ -140,7 +195,7 @@ const ChatSupport: React.FC<ChatSupportProps> = ({ onPageChange }) => {
                   <div className={`w-2 h-2 rounded-full ${isOnline ? 'bg-green-400' : 'bg-red-400'} animate-pulse`}></div>
                   <p className="text-blue-100 font-medium">
                     {isOnline ? 'Online • Instant responses' : 'Reconnecting...'}
-                  </p>
+                  {isOnline ? (GEMINI_API_KEY && GEMINI_API_KEY !== 'your-gemini-api-key-here' ? 'Online • AI-Powered' : 'Online • Smart responses') : 'Reconnecting...'}
                 </div>
               </div>
             </div>
@@ -206,7 +261,9 @@ const ChatSupport: React.FC<ChatSupportProps> = ({ onPageChange }) => {
 
           {/* Quick Replies */}
           <div className="px-6 py-4 border-t bg-gradient-to-r from-slate-50 to-blue-50">
-            <p className="text-xs text-gray-600 mb-3 font-semibold">💬 Quick responses:</p>
+            <p className="text-xs text-gray-600 mb-3 font-semibold">
+              💬 Quick responses {GEMINI_API_KEY && GEMINI_API_KEY !== 'your-gemini-api-key-here' ? '(AI-Powered)' : '(Smart Replies)'}:
+            </p>
             <div className="flex flex-wrap gap-2 max-h-20 overflow-y-auto">
               {quickReplies.map((reply, index) => (
                 <button
