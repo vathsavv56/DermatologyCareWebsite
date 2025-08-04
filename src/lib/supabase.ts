@@ -1,13 +1,15 @@
 import { createClient } from '@supabase/supabase-js'
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://your-project-ref.supabase.co'
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'your-anon-key-here'
 
-if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error('Missing Supabase environment variables')
-}
-
+// Create Supabase client with fallback values
 export const supabase = createClient(supabaseUrl, supabaseAnonKey)
+
+// Check if environment variables are properly configured
+const isConfigured = supabaseUrl !== 'https://your-project-ref.supabase.co' && 
+                    supabaseAnonKey !== 'your-anon-key-here' &&
+                    supabaseUrl && supabaseAnonKey
 
 // Database types
 export interface Hospital {
@@ -40,6 +42,12 @@ export interface Doctor {
 
 // Hospital search function
 export async function searchHospitals(query: string = '', limit: number = 10) {
+  // If Supabase is not configured, return mock data
+  if (!isConfigured) {
+    console.warn('Supabase not configured, using mock data')
+    return getMockHospitals(query)
+  }
+
   try {
     let supabaseQuery = supabase
       .from('hospitals')
@@ -76,6 +84,12 @@ export async function searchHospitals(query: string = '', limit: number = 10) {
 
 // Get doctors for a specific hospital
 export async function getDoctorsByHospital(hospitalId: string) {
+  // If Supabase is not configured, return mock data
+  if (!isConfigured) {
+    console.warn('Supabase not configured, using mock doctors')
+    return getMockDoctors()
+  }
+
   try {
     const { data, error } = await supabase
       .from('doctors')
@@ -97,6 +111,12 @@ export async function getDoctorsByHospital(hospitalId: string) {
 
 // Get hospital by ID
 export async function getHospitalById(hospitalId: string) {
+  // If Supabase is not configured, return mock data
+  if (!isConfigured) {
+    console.warn('Supabase not configured, using mock hospital')
+    return getMockHospitalById(hospitalId)
+  }
+
   try {
     const { data, error } = await supabase
       .from('hospitals')
@@ -113,5 +133,77 @@ export async function getHospitalById(hospitalId: string) {
   } catch (error) {
     console.error('Error in getHospitalById:', error)
     return null
+  }
+}
+
+// Mock data functions for when Supabase is not configured
+function getMockHospitals(query: string = '') {
+  const mockHospitals = [
+    {
+      id: '1',
+      name: 'Apollo Dermatology Center',
+      address: '15 MG Road, Connaught Place',
+      city: 'New Delhi',
+      state: 'Delhi',
+      zip_code: '110001',
+      rating: 4.8,
+      doctor_count: 18,
+      specialties: ['General Dermatology', 'Cosmetic Procedures', 'Skin Cancer Treatment'],
+      phone: '011-2345-6789',
+      website: 'apollo-derm.in',
+      created_at: new Date().toISOString()
+    },
+    {
+      id: '2',
+      name: 'Fortis Skin Institute',
+      address: '45 Vasant Kunj',
+      city: 'New Delhi',
+      state: 'Delhi',
+      zip_code: '110070',
+      rating: 4.7,
+      doctor_count: 22,
+      specialties: ['Advanced Dermatology', 'Laser Treatments', 'Hair Transplant'],
+      phone: '011-3456-7890',
+      website: 'fortis-skin.in',
+      created_at: new Date().toISOString()
+    }
+  ]
+  
+  // Return random 7-10 hospitals
+  const randomCount = Math.floor(Math.random() * 4) + 7
+  return mockHospitals.slice(0, randomCount)
+}
+
+function getMockDoctors() {
+  return [
+    {
+      id: '1',
+      hospital_id: '1',
+      name: 'Dr. Rajesh Sharma',
+      specialty: 'General Dermatology',
+      experience: 15,
+      rating: 4.8,
+      status: 'Available',
+      hours: '09:00-17:00',
+      expertise: ['Acne Treatment', 'Skin Cancer Screening', 'Psoriasis Treatment'],
+      created_at: new Date().toISOString()
+    }
+  ]
+}
+
+function getMockHospitalById(hospitalId: string) {
+  return {
+    id: hospitalId,
+    name: 'Apollo Dermatology Center',
+    address: '15 MG Road, Connaught Place',
+    city: 'New Delhi',
+    state: 'Delhi',
+    zip_code: '110001',
+    rating: 4.8,
+    doctor_count: 18,
+    specialties: ['General Dermatology', 'Cosmetic Procedures', 'Skin Cancer Treatment'],
+    phone: '011-2345-6789',
+    website: 'apollo-derm.in',
+    created_at: new Date().toISOString()
   }
 }
