@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Search, MapPin, Star, Users, Clock, Filter, Award, Phone, Globe, ChevronRight, Navigation, X } from 'lucide-react';
-import { searchHospitals, Hospital } from '../lib/supabase';
+import { motion } from 'framer-motion';
+import { Search, MapPin, Star, Users, Clock, Filter, Award, ChevronRight, Navigation, X } from 'lucide-react';
+import toast from 'react-hot-toast';
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
+import { apiService, Hospital } from '../lib/demoApi';
 
 interface HospitalSearchProps {
-  onSelectHospital: (hospital: any) => void;
+  onSelectHospital: (hospital: Hospital) => void;
   onPageChange: (page: string) => void;
 }
 
@@ -13,7 +17,6 @@ const HospitalSearch: React.FC<HospitalSearchProps> = ({ onSelectHospital, onPag
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState('rating');
   const [loading, setLoading] = useState(true);
-  const [locationFilter, setLocationFilter] = useState('');
   const [showLocationPopup, setShowLocationPopup] = useState(false);
   const [locationGranted, setLocationGranted] = useState(false);
 
@@ -25,11 +28,12 @@ const HospitalSearch: React.FC<HospitalSearchProps> = ({ onSelectHospital, onPag
   const handleSearch = async (query: string) => {
     setLoading(true);
     try {
-      const results = await searchHospitals(query);
+      const results = await apiService.searchHospitals(query);
       setHospitals(results);
       setFilteredHospitals(results);
     } catch (error) {
       console.error('Error searching hospitals:', error);
+      toast.error('Failed to load hospitals. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -53,7 +57,7 @@ const HospitalSearch: React.FC<HospitalSearchProps> = ({ onSelectHospital, onPag
         sorted.sort((a, b) => b.rating - a.rating);
         break;
       case 'doctors':
-        sorted.sort((a, b) => b.doctor_count - a.doctor_count);
+        sorted.sort((a, b) => b.doctorCount - a.doctorCount);
         break;
       case 'name':
         sorted.sort((a, b) => a.name.localeCompare(b.name));
@@ -93,13 +97,42 @@ const HospitalSearch: React.FC<HospitalSearchProps> = ({ onSelectHospital, onPag
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="relative">
-            <div className="animate-spin rounded-full h-16 w-16 border-4 border-blue-200 border-t-blue-600 mx-auto mb-6"></div>
-            <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-400 to-indigo-500 opacity-20 animate-pulse"></div>
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 py-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="mb-12">
+            <div className="text-center mb-8">
+              <Skeleton height={60} className="mb-4" />
+              <Skeleton height={30} width="60%" />
+            </div>
+            
+            <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-8 mb-8 border border-slate-200">
+              <div className="flex flex-col lg:flex-row gap-6">
+                <Skeleton height={60} className="flex-1" />
+                <Skeleton height={60} width={200} />
+              </div>
+            </div>
+            
+            <Skeleton height={30} width="50%" className="mb-8" />
           </div>
-          <p className="text-slate-600 text-lg font-medium">Finding the best hospitals for you...</p>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[...Array(6)].map((_, index) => (
+              <div key={index} className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg p-8 border border-slate-200">
+                <Skeleton height={30} className="mb-4" />
+                <Skeleton height={20} className="mb-6" />
+                <div className="grid grid-cols-2 gap-4 mb-6">
+                  <Skeleton height={60} />
+                  <Skeleton height={60} />
+                </div>
+                <Skeleton height={20} className="mb-4" />
+                <div className="flex gap-2 mb-6">
+                  <Skeleton height={30} width={80} />
+                  <Skeleton height={30} width={80} />
+                </div>
+                <Skeleton height={50} />
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     );
@@ -208,80 +241,85 @@ const HospitalSearch: React.FC<HospitalSearchProps> = ({ onSelectHospital, onPag
 
         {/* Hospital Cards */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredHospitals.map((hospital, index) => (
-            <div
-              key={index}
-              onClick={() => handleHospitalClick(hospital)}
-              className="group bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 cursor-pointer transform hover:-translate-y-2 border border-slate-200 hover:border-blue-300 overflow-hidden"
-            >
-              <div className="relative p-8">
-                {/* Gradient overlay */}
-                <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-400/10 to-indigo-500/10 rounded-full -translate-y-16 translate-x-16 group-hover:scale-150 transition-transform duration-700"></div>
-                
-                <div className="relative">
-                  <div className="flex justify-between items-start mb-6">
-                    <div className="flex-1">
-                      <h3 className="text-2xl font-bold text-slate-900 mb-2 group-hover:text-blue-600 transition-colors">{hospital.name}</h3>
-                      <div className="flex items-center space-x-2">
-                        <Award className="w-5 h-5 text-blue-500" />
-                        <span className="text-blue-600 font-semibold text-sm">Certified Excellence</span>
-                      </div>
-                    </div>
-                    <div className="flex items-center bg-gradient-to-r from-emerald-100 to-green-100 px-4 py-2 rounded-full shadow-sm">
-                      <Star className="w-5 h-5 text-emerald-600 mr-2 fill-current" />
-                      <span className="text-emerald-800 font-bold text-lg">{hospital.rating}</span>
-                    </div>
-                  </div>
-                
-                  <div className="flex items-center text-slate-600 mb-6">
-                    <MapPin className="w-5 h-5 mr-3 text-blue-500" />
-                    <span className="font-medium">{hospital.address}, {hospital.city}, {hospital.state}</span>
-                  </div>
-                
-                  <div className="grid grid-cols-2 gap-4 mb-6">
-                    <div className="flex items-center bg-blue-50 px-4 py-3 rounded-xl">
-                      <Users className="w-5 h-5 mr-3 text-blue-600" />
-                      <div>
-                        <div className="font-bold text-blue-900">{hospital.doctor_count}</div>
-                        <div className="text-blue-600 text-sm">Doctors</div>
-                      </div>
-                    </div>
-                    <div className="flex items-center bg-emerald-50 px-4 py-3 rounded-xl">
-                      <Clock className="w-5 h-5 mr-3 text-emerald-600" />
-                      <div>
-                        <div className="font-bold text-emerald-900">24/7</div>
-                        <div className="text-emerald-600 text-sm">Available</div>
-                      </div>
-                    </div>
-                  </div>
-                
-                  <div className="border-t border-slate-200 pt-6">
-                    <p className="text-sm font-semibold text-slate-700 mb-3">Featured Specialists:</p>
-                    <div className="flex flex-wrap gap-2 mb-4">
-                      {hospital.specialties?.slice(0, 2).map((specialty, specIndex) => (
-                        <span
-                          key={specIndex}
-                          className="bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-800 text-sm px-3 py-1 rounded-full font-medium"
-                        >
-                          {specialty}
-                        </span>
-                      ))}
-                      {hospital.specialties && hospital.specialties.length > 2 && (
-                        <span className="bg-slate-100 text-slate-600 text-sm px-3 py-1 rounded-full font-medium">
-                          +{hospital.specialties.length - 2} more
-                        </span>
-                      )}
-                    </div>
-                  </div>
+          {filteredHospitals.map((hospital, index) => {
+            return (
+              <motion.div
+                key={hospital._id}
+                initial={{ opacity: 0, y: 50 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                onClick={() => handleHospitalClick(hospital)}
+                className="group bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 cursor-pointer transform hover:-translate-y-2 border border-slate-200 hover:border-blue-300 overflow-hidden"
+              >
+                <div className="relative p-8">
+                  {/* Gradient overlay */}
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-400/10 to-indigo-500/10 rounded-full -translate-y-16 translate-x-16 group-hover:scale-150 transition-transform duration-700"></div>
                   
-                  <button className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-4 rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 font-semibold text-lg shadow-lg hover:shadow-xl group-hover:scale-105 flex items-center justify-center">
-                    View Specialists
-                    <ChevronRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
-                  </button>
+                  <div className="relative">
+                    <div className="flex justify-between items-start mb-6">
+                      <div className="flex-1">
+                        <h3 className="text-2xl font-bold text-slate-900 mb-2 group-hover:text-blue-600 transition-colors">{hospital.name}</h3>
+                        <div className="flex items-center space-x-2">
+                          <Award className="w-5 h-5 text-blue-500" />
+                          <span className="text-blue-600 font-semibold text-sm">Certified Excellence</span>
+                        </div>
+                      </div>
+                      <div className="flex items-center bg-gradient-to-r from-emerald-100 to-green-100 px-4 py-2 rounded-full shadow-sm">
+                        <Star className="w-5 h-5 text-emerald-600 mr-2 fill-current" />
+                        <span className="text-emerald-800 font-bold text-lg">{hospital.rating}</span>
+                      </div>
+                    </div>
+                  
+                    <div className="flex items-center text-slate-600 mb-6">
+                      <MapPin className="w-5 h-5 mr-3 text-blue-500" />
+                      <span className="font-medium">{hospital.address}, {hospital.city}, {hospital.state}</span>
+                    </div>
+                  
+                    <div className="grid grid-cols-2 gap-4 mb-6">
+                      <div className="flex items-center bg-blue-50 px-4 py-3 rounded-xl">
+                        <Users className="w-5 h-5 mr-3 text-blue-600" />
+                        <div>
+                          <div className="font-bold text-blue-900">{hospital.doctorCount}</div>
+                          <div className="text-blue-600 text-sm">Doctors</div>
+                        </div>
+                      </div>
+                      <div className="flex items-center bg-emerald-50 px-4 py-3 rounded-xl">
+                        <Clock className="w-5 h-5 mr-3 text-emerald-600" />
+                        <div>
+                          <div className="font-bold text-emerald-900">24/7</div>
+                          <div className="text-emerald-600 text-sm">Available</div>
+                        </div>
+                      </div>
+                    </div>
+                  
+                    <div className="border-t border-slate-200 pt-6">
+                      <p className="text-sm font-semibold text-slate-700 mb-3">Featured Specialists:</p>
+                      <div className="flex flex-wrap gap-2 mb-4">
+                        {hospital.specialties?.slice(0, 2).map((specialty, specIndex) => (
+                          <span
+                            key={specIndex}
+                            className="bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-800 text-sm px-3 py-1 rounded-full font-medium"
+                          >
+                            {specialty}
+                          </span>
+                        ))}
+                        {hospital.specialties && hospital.specialties.length > 2 && (
+                          <span className="bg-slate-100 text-slate-600 text-sm px-3 py-1 rounded-full font-medium">
+                            +{hospital.specialties.length - 2} more
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    
+                    <button className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-4 rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 font-semibold text-lg shadow-lg hover:shadow-xl group-hover:scale-105 flex items-center justify-center">
+                      View Specialists
+                      <ChevronRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+                    </button>
+                  </div>
                 </div>
-              </div>
-            </div>
-          ))}
+              </motion.div>
+            );
+          })}
         </div>
 
         {filteredHospitals.length === 0 && (

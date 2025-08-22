@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { Star, Clock, Calendar, Video, Award, ArrowLeft } from 'lucide-react';
-import { getDoctorsByHospital, Doctor } from '../lib/supabase';
+import toast from 'react-hot-toast';
+import Skeleton from 'react-loading-skeleton';
+import { apiService, Doctor, Hospital } from '../lib/demoApi';
 
 interface DoctorListProps {
-  selectedHospital: any;
+  selectedHospital: Hospital | null;
   onBookAppointment: (doctor: Doctor, type: 'in-person' | 'telemedicine') => void;
   onPageChange: (page: string) => void;
 }
@@ -24,14 +27,15 @@ const DoctorList: React.FC<DoctorListProps> = ({ selectedHospital, onBookAppoint
   }, [selectedHospital]);
 
   const loadDoctors = async () => {
-    if (!selectedHospital?.id) return;
+    if (!selectedHospital?._id) return;
     
     setLoading(true);
     try {
-      const doctorData = await getDoctorsByHospital(selectedHospital.id);
+      const doctorData = await apiService.getDoctorsByHospital(selectedHospital._id);
       setDoctors(doctorData);
     } catch (error) {
       console.error('Error loading doctors:', error);
+      toast.error('Failed to load doctors. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -75,10 +79,50 @@ const DoctorList: React.FC<DoctorListProps> = ({ selectedHospital, onBookAppoint
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading doctors...</p>
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 py-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Header skeleton */}
+          <div className="flex items-center mb-8">
+            <Skeleton circle width={48} height={48} className="mr-4" />
+            <div>
+              <Skeleton height={32} width={300} className="mb-2" />
+              <Skeleton height={20} width={200} />
+            </div>
+          </div>
+          
+          {/* Hospital info skeleton */}
+          <div className="bg-white rounded-2xl shadow-lg p-8 mb-8">
+            <Skeleton height={30} width={250} className="mb-4" />
+            <Skeleton height={20} width={400} className="mb-4" />
+            <div className="flex gap-4">
+              <Skeleton height={24} width={80} />
+              <Skeleton height={24} width={120} />
+            </div>
+          </div>
+
+          {/* Doctor cards skeleton */}
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[...Array(6)].map((_, index) => (
+              <div key={index} className="bg-white rounded-2xl shadow-lg p-6">
+                <div className="flex items-center mb-4">
+                  <Skeleton circle width={60} height={60} className="mr-4" />
+                  <div className="flex-1">
+                    <Skeleton height={24} width={150} className="mb-2" />
+                    <Skeleton height={16} width={100} />
+                  </div>
+                </div>
+                <Skeleton height={16} width={200} className="mb-4" />
+                <div className="flex gap-2 mb-4">
+                  <Skeleton height={24} width={60} />
+                  <Skeleton height={24} width={80} />
+                </div>
+                <div className="flex gap-2">
+                  <Skeleton height={40} className="flex-1" />
+                  <Skeleton height={40} className="flex-1" />
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     );
@@ -106,7 +150,7 @@ const DoctorList: React.FC<DoctorListProps> = ({ selectedHospital, onBookAppoint
                 <span className="font-medium">{selectedHospital.rating}</span>
               </div>
               <div className="text-gray-600">
-                {selectedHospital.doctor_count} Doctors Available
+                {selectedHospital.doctorCount} Doctors Available
               </div>
             </div>
           </div>
@@ -114,8 +158,15 @@ const DoctorList: React.FC<DoctorListProps> = ({ selectedHospital, onBookAppoint
 
         {/* Doctor Cards */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {doctors.map((doctor, index) => (
-            <div key={index} className="bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow">
+          {doctors.map((doctor, index) => {
+            return (
+              <motion.div 
+                key={doctor._id} 
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                className="bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
+              >
               <div className="p-6">
                 <div className="flex justify-between items-start mb-4">
                   <div>
@@ -186,8 +237,9 @@ const DoctorList: React.FC<DoctorListProps> = ({ selectedHospital, onBookAppoint
                   </button>
                 </div>
               </div>
-            </div>
-          ))}
+            </motion.div>
+            );
+          })}
         </div>
 
         {doctors.length === 0 && (

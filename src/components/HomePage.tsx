@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Search, MapPin, Calendar, Users, Award, Shield, Clock, Star, ArrowRight, Heart, Zap, Globe, CheckCircle, Play, ArrowDown } from 'lucide-react';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import { Search, MapPin, Calendar, Users, Award, Shield, Clock, Star, ArrowRight, CheckCircle, Play, ArrowDown, Sparkles, Bot, Zap, Heart } from 'lucide-react';
+import { useInView } from 'react-intersection-observer';
 
 interface HomePageProps {
   onPageChange: (page: string) => void;
@@ -8,6 +10,9 @@ interface HomePageProps {
 export default function HomePage({ onPageChange }: HomePageProps) {
   const [scrollY, setScrollY] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
+  const { scrollYProgress } = useScroll();
+  const backgroundY = useTransform(scrollYProgress, [0, 1], ['0%', '50%']);
+  const textY = useTransform(scrollYProgress, [0, 1], ['0%', '200%']);
 
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);
