@@ -45,7 +45,7 @@ export async function searchHospitals(query: string = '', limit: number = 10) {
   // If Supabase is not configured, return mock data
   if (!isConfigured) {
     console.warn('Supabase not configured, using mock data')
-    return getMockHospitals(query)
+    return getMockHospitals()
   }
 
   try {
@@ -64,7 +64,7 @@ export async function searchHospitals(query: string = '', limit: number = 10) {
       `)
     }
 
-    const { data, error } = await supabaseQuery.limit(500) // Get more records to randomize
+    const { data, error } = await supabaseQuery.limit(limit)
 
     if (error) {
       console.error('Error fetching hospitals:', error)
@@ -137,7 +137,7 @@ export async function getHospitalById(hospitalId: string) {
 }
 
 // Mock data functions for when Supabase is not configured
-function getMockHospitals(query: string = '') {
+function getMockHospitals() {
   const mockHospitals = [
     {
       id: '1',

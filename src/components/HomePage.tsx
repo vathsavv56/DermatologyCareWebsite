@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Search, MapPin, Calendar, Users, Award, Shield, Clock, Star, ArrowRight, Heart, Zap, Globe, CheckCircle, Play, ArrowDown } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { Search, MapPin, Calendar, Users, Award, Shield, Clock, Star, ArrowRight, CheckCircle, Play, ArrowDown } from 'lucide-react';
 
 interface HomePageProps {
   onPageChange: (page: string) => void;
