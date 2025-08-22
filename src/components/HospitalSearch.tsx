@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { Search, MapPin, Star, Users, Clock, Filter, Award, ChevronRight, Navigation, X } from 'lucide-react';
-import { useInView } from 'react-intersection-observer';
 import toast from 'react-hot-toast';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
-import { apiService, Hospital } from '../lib/api';
+import { apiService, Hospital } from '../lib/demoApi';
 
 interface HospitalSearchProps {
   onSelectHospital: (hospital: Hospital) => void;
@@ -243,17 +242,11 @@ const HospitalSearch: React.FC<HospitalSearchProps> = ({ onSelectHospital, onPag
         {/* Hospital Cards */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {filteredHospitals.map((hospital, index) => {
-            const [ref, inView] = useInView({
-              threshold: 0.1,
-              triggerOnce: true,
-            });
-
             return (
               <motion.div
                 key={hospital._id}
-                ref={ref}
                 initial={{ opacity: 0, y: 50 }}
-                animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
+                animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 onClick={() => handleHospitalClick(hospital)}
                 className="group bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 cursor-pointer transform hover:-translate-y-2 border border-slate-200 hover:border-blue-300 overflow-hidden"

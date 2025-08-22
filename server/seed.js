@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
-import Hospital from '../src/models/Hospital.js';
-import Doctor from '../src/models/Doctor.js';
-import connectDB from '../src/config/database.js';
+import Hospital from './src/models/Hospital.js';
+import Doctor from './src/models/Doctor.js';
+import connectDB from './src/config/database.js';
 
 // Sample data for seeding
 const hospitals = [

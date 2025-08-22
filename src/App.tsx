@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Toaster } from 'react-hot-toast';
 import { motion, AnimatePresence } from 'framer-motion';
 import Navigation from './components/Navigation';
@@ -9,7 +9,7 @@ import BookingPage from './components/BookingPage';
 import SymptomChecker from './components/SymptomChecker';
 import ChatSupport from './components/ChatSupport';
 import AppointmentManager from './components/AppointmentManager';
-import { Hospital, Doctor } from './lib/api';
+import { Hospital, Doctor } from './lib/demoApi';
 
 function App() {
   const [currentPage, setCurrentPage] = useState('home');
