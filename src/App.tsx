@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { Toaster } from 'react-hot-toast';
+import { motion, AnimatePresence } from 'framer-motion';
 import Navigation from './components/Navigation';
 import HomePage from './components/HomePage';
 import HospitalSearch from './components/HospitalSearch';
@@ -7,24 +9,7 @@ import BookingPage from './components/BookingPage';
 import SymptomChecker from './components/SymptomChecker';
 import ChatSupport from './components/ChatSupport';
 import AppointmentManager from './components/AppointmentManager';
-
-interface Hospital {
-  name: string;
-  address: string;
-  rating: number;
-  doctorCount: number;
-  doctors: string[];
-}
-
-interface Doctor {
-  name: string;
-  specialty: string;
-  experience: number;
-  rating: number;
-  status: string;
-  hours: string;
-  expertise: string[];
-}
+import { Hospital, Doctor } from './lib/api';
 
 function App() {
   const [currentPage, setCurrentPage] = useState('home');
@@ -46,48 +31,81 @@ function App() {
     setCurrentPage('booking');
   };
 
+  const pageVariants = {
+    initial: { opacity: 0, y: 20 },
+    in: { opacity: 1, y: 0 },
+    out: { opacity: 0, y: -20 }
+  };
+
+  const pageTransition = {
+    type: 'tween',
+    ease: 'anticipate',
+    duration: 0.4
+  };
+
   const renderCurrentPage = () => {
-    switch (currentPage) {
-      case 'home':
-        return <HomePage onPageChange={handlePageChange} />;
-      case 'search':
-        return (
-          <HospitalSearch 
-            onSelectHospital={handleSelectHospital}
-            onPageChange={handlePageChange}
-          />
-        );
-      case 'doctors':
-        return (
-          <DoctorList 
-            selectedHospital={selectedHospital}
-            onBookAppointment={handleBookAppointment}
-            onPageChange={handlePageChange}
-          />
-        );
-      case 'booking':
-        return (
-          <BookingPage 
-            selectedDoctor={selectedDoctor}
-            appointmentType={appointmentType}
-            onPageChange={handlePageChange}
-          />
-        );
-      case 'symptom-checker':
-        return <SymptomChecker onPageChange={handlePageChange} />;
-      case 'chat':
-        return <ChatSupport onPageChange={handlePageChange} />;
-      case 'appointments':
-        return <AppointmentManager onPageChange={handlePageChange} />;
-      default:
-        return <HomePage onPageChange={handlePageChange} />;
-    }
+    const pages = {
+      'home': <HomePage onPageChange={handlePageChange} />,
+      'search': (
+        <HospitalSearch 
+          onSelectHospital={handleSelectHospital}
+          onPageChange={handlePageChange}
+        />
+      ),
+      'doctors': (
+        <DoctorList 
+          selectedHospital={selectedHospital}
+          onBookAppointment={handleBookAppointment}
+          onPageChange={handlePageChange}
+        />
+      ),
+      'booking': (
+        <BookingPage 
+          selectedDoctor={selectedDoctor}
+          appointmentType={appointmentType}
+          onPageChange={handlePageChange}
+        />
+      ),
+      'symptom-checker': <SymptomChecker onPageChange={handlePageChange} />,
+      'chat': <ChatSupport onPageChange={handlePageChange} />,
+      'appointments': <AppointmentManager onPageChange={handlePageChange} />
+    };
+
+    return pages[currentPage as keyof typeof pages] || pages.home;
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
       <Navigation currentPage={currentPage} onPageChange={handlePageChange} />
-      {renderCurrentPage()}
+      
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={currentPage}
+          initial="initial"
+          animate="in"
+          exit="out"
+          variants={pageVariants}
+          transition={pageTransition}
+          className="min-h-screen"
+        >
+          {renderCurrentPage()}
+        </motion.div>
+      </AnimatePresence>
+
+      {/* Global toast notifications */}
+      <Toaster 
+        position="top-right"
+        toastOptions={{
+          duration: 4000,
+          style: {
+            background: '#363636',
+            color: '#fff',
+          },
+        }}
+      />
+      
+      {/* Always show chat support */}
+      <ChatSupport onPageChange={handlePageChange} />
     </div>
   );
 }
