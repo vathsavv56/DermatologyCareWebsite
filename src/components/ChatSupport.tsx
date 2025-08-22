@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { X, Send, MessageCircle, User, Bot, Phone, Mail } from 'lucide-react';
+import { X, Send, MessageCircle, User, Bot } from 'lucide-react';
 
 interface ChatSupportProps {
   onPageChange?: (page: string) => void;
@@ -12,7 +12,7 @@ interface Message {
   timestamp: Date;
 }
 
-const ChatSupport: React.FC<ChatSupportProps> = ({ onPageChange }) => {
+const ChatSupport: React.FC<ChatSupportProps> = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     {

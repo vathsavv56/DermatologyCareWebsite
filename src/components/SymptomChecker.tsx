@@ -5,9 +5,17 @@ interface SymptomCheckerProps {
   onPageChange: (page: string) => void;
 }
 
+interface Condition {
+  name: string;
+  probability: string;
+  description: string;
+  urgency: string;
+  recommendations: string[];
+}
+
 const SymptomChecker: React.FC<SymptomCheckerProps> = ({ onPageChange }) => {
   const [selectedSymptoms, setSelectedSymptoms] = useState<string[]>([]);
-  const [results, setResults] = useState<any>(null);
+  const [results, setResults] = useState<Condition[] | null>(null);
   const [currentStep, setCurrentStep] = useState(1);
 
   const symptomCategories = [
@@ -179,7 +187,7 @@ const SymptomChecker: React.FC<SymptomCheckerProps> = ({ onPageChange }) => {
               <h2 className="text-xl font-semibold text-gray-900 mb-4">Analysis Results</h2>
               
               <div className="space-y-4">
-                {results.map((condition: any, index: number) => (
+                {results.map((condition: Condition, index: number) => (
                   <div key={index} className="border border-gray-200 rounded-lg p-4">
                     <div className="flex justify-between items-start mb-3">
                       <h3 className="font-semibold text-gray-900">{condition.name}</h3>

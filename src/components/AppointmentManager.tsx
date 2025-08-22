@@ -130,7 +130,7 @@ const AppointmentManager: React.FC<AppointmentManagerProps> = ({ onPageChange })
           ].map(tab => (
             <button
               key={tab.key}
-              onClick={() => setActiveTab(tab.key as any)}
+              onClick={() => setActiveTab(tab.key as 'upcoming' | 'completed' | 'all')}
               className={`flex-1 px-4 py-3 rounded-md font-medium transition-colors ${
                 activeTab === tab.key
                   ? 'bg-blue-600 text-white'

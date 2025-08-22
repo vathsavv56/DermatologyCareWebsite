@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Search, MapPin, Star, Users, Clock, Filter, Award, Phone, Globe, ChevronRight, Navigation, X } from 'lucide-react';
+import { Search, MapPin, Star, Users, Clock, Filter, Award, ChevronRight, Navigation, X } from 'lucide-react';
 import { searchHospitals, Hospital } from '../lib/supabase';
 
 interface HospitalSearchProps {
-  onSelectHospital: (hospital: any) => void;
+  onSelectHospital: (hospital: Hospital) => void;
   onPageChange: (page: string) => void;
 }
 
@@ -13,7 +13,6 @@ const HospitalSearch: React.FC<HospitalSearchProps> = ({ onSelectHospital, onPag
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState('rating');
   const [loading, setLoading] = useState(true);
-  const [locationFilter, setLocationFilter] = useState('');
   const [showLocationPopup, setShowLocationPopup] = useState(false);
   const [locationGranted, setLocationGranted] = useState(false);
 
@@ -46,7 +45,7 @@ const HospitalSearch: React.FC<HospitalSearchProps> = ({ onSelectHospital, onPag
 
   useEffect(() => {
     // Apply sorting to current results
-    let sorted = [...hospitals];
+    const sorted = [...hospitals];
     
     switch (sortBy) {
       case 'rating':

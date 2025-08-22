@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Star, Clock, Calendar, Video, Award, ArrowLeft } from 'lucide-react';
-import { getDoctorsByHospital, Doctor } from '../lib/supabase';
+import { getDoctorsByHospital, Doctor, Hospital } from '../lib/supabase';
 
 interface DoctorListProps {
-  selectedHospital: any;
+  selectedHospital: Hospital;
   onBookAppointment: (doctor: Doctor, type: 'in-person' | 'telemedicine') => void;
   onPageChange: (page: string) => void;
 }
@@ -12,18 +12,7 @@ const DoctorList: React.FC<DoctorListProps> = ({ selectedHospital, onBookAppoint
   const [doctors, setDoctors] = useState<Doctor[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    if (selectedHospital) {
-      loadDoctors();
-      // Simulate random availability changes
-      const interval = setInterval(() => {
-        updateDoctorAvailability();
-      }, 10000);
-      return () => clearInterval(interval);
-    }
-  }, [selectedHospital]);
-
-  const loadDoctors = async () => {
+  const loadDoctors = useCallback(async () => {
     if (!selectedHospital?.id) return;
     
     setLoading(true);
@@ -35,16 +24,32 @@ const DoctorList: React.FC<DoctorListProps> = ({ selectedHospital, onBookAppoint
     } finally {
       setLoading(false);
     }
-  };
+  }, [selectedHospital?.id]);
 
-  const updateDoctorAvailability = () => {
-    setDoctors(prevDoctors => 
-      prevDoctors.map(doctor => ({
-        ...doctor,
-        status: Math.random() > 0.3 ? 'Available' : 'Busy'
-      }))
-    );
-  };
+  useEffect(() => {
+    if (selectedHospital) {
+      loadDoctors();
+      
+      // Function to simulate random availability changes
+      const updateDoctorAvailability = () => {
+        setDoctors(prevDoctors => 
+          prevDoctors.map(doctor => ({
+            ...doctor,
+            status: Math.random() > 0.3 ? 'Available' : 'Busy'
+          }))
+        );
+      };
+      
+      // Simulate random availability changes
+      const interval = setInterval(() => {
+        updateDoctorAvailability();
+      }, 10000);
+      
+      return () => clearInterval(interval);
+    }
+  }, [selectedHospital, loadDoctors]);
+
+  // Remove the separate updateDoctorAvailability function since it's now inside useEffect
 
   const getStatusColor = (status: string) => {
     switch (status) {
